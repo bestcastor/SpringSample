@@ -22,11 +22,57 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Formatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Util {
 
-  public Util() {
-    // TODO Auto-generated constructor stub
+  //method thread safe
+  private static final Object lock = new Object();
+  
+  public static void threadSafeWithLockObject(){
+    synchronized(lock){
+      //init some object;
+    }
+  }
+  
+  public static void threadSafeWithClass(){
+    synchronized(Util.class){
+      //lock this class, do something.
+    }
+  }
+  
+  // http://www.runoob.com/java/java-regular-expressions.html
+  public static void playWithRegEx() {
+    String pattern = "^/image/user.*"
+            + "|^/image/file.*"
+            + "|^/user/image.*"
+            + "|^/badgephotos/org.*"
+            + "|^/badges/org.*"
+            + "|^/orguser/image.*"
+            + "|^/user/get_public_image.*"
+            + "|^/user/get_badge_photo.*"
+            + "|^/user/get_public_image.*";
+    
+    String[] strings = {"/image/user/1234/type",
+                        "/image/file",
+                        "/image/fil",
+                        "/user/get_public_image",
+                        "testNN/user/get_public_image",
+                        "/user/get_badge_phot",
+                        "/user/"
+                        };
+    
+    Pattern pr = Pattern.compile(pattern);
+    
+    for (String s: strings){
+      Matcher m = pr.matcher(s);
+      if (m.find()){
+        System.out.println(s+ ": Matched! ^_^");
+      }else {
+        System.out.println(s+": Not matched! T_T");
+      }
+    }
   }
 
   public static String readerToString(Reader reader) {
